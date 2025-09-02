@@ -8,9 +8,8 @@ class Advertisement(
     @field:[Id GeneratedValue(strategy = GenerationType.IDENTITY)] var id: Long,
     var email: String,
     var paidPromotional: Boolean,
-    var status: AdvertisementStatus,
-    @field:OneToOne(cascade = [CascadeType.ALL])
-    var address: Address,
-    @field:OneToOne(cascade = [CascadeType.ALL])
-    var apartmentDescription: ApartmentDescription
+    @field:Enumerated(EnumType.STRING) var status: AdvertisementStatus,
+    @field:OneToOne(cascade = [CascadeType.ALL]) var address: Address,
+    @field:OneToOne(cascade = [CascadeType.ALL]) var apartmentDescription: ApartmentDescription,
+    @field:[ManyToOne(cascade = [CascadeType.ALL]) JoinColumn("user_id")] var user: User,
 )

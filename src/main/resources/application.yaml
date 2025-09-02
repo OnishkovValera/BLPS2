@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: CianApplication
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    name: postgres
+    password: admin
+    url: jdbc:postgresql://localhost:5432/Cian
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.yaml

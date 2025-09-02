@@ -8,15 +8,11 @@ import jakarta.persistence.OneToOne
 
 @Entity
 class ApartmentDescription(
-    @field:[Id GeneratedValue(strategy = GenerationType.IDENTITY)]
-    var id: Long,
+    @field:[Id GeneratedValue(strategy = GenerationType.IDENTITY)] var id: Long,
     var numberOfRooms: Int,
     var area: Double,
     var floor: Int,
     var totalFloors: Int,
     var hasBalcony: Boolean,
     var descriptionText: String,
-    @field:OneToOne(mappedBy = "apartmentDescription")
-    var Advertisement: Advertisement
-
-)
+    @field:OneToOne(mappedBy = "apartmentDescription") var Advertisement: Advertisement)
