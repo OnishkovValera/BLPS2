@@ -9,5 +9,4 @@ class Blps1KotlinApplicationTests {
 	@Test
 	fun contextLoads() {
 	}
-
 }
