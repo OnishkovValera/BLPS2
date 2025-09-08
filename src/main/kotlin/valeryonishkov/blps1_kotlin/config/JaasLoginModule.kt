@@ -13,7 +13,7 @@ import javax.security.auth.callback.*
 import javax.security.auth.spi.LoginModule
 
 class JaasLoginModule : LoginModule {
-    private var userRepository: UserRepository? = null
+    private lateinit var userRepository: UserRepository
     private var passwordEncoder: PasswordEncoder? = null
     private var login: String? = null
     private lateinit var subject: Subject
@@ -28,7 +28,7 @@ class JaasLoginModule : LoginModule {
     ) {
         this.subject = subject
         this.callbackHandler = callbackHandler
-        this.userRepository = options["userRepository"] as? UserRepository
+        this.userRepository = options["userRepository"] as UserRepository
         this.passwordEncoder = options["passwordEncoder"] as? PasswordEncoder
         
         // Проверяем, что все зависимости инициализированы
@@ -70,7 +70,7 @@ class JaasLoginModule : LoginModule {
             return false
         }
         
-        val user: User? = userRepository?.findByEmail(login!!)
+        val user: User? = userRepository.findByEmail(login!!)
         loginSucceeded = user != null && passwordEncoder?.matches(password, user.password) == true
         
         return loginSucceeded

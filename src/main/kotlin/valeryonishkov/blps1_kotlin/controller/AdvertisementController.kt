@@ -18,19 +18,17 @@ class AdvertisementController(private val advertisementService: AdvertisementSer
         return ResponseEntity.ok(advertisementService.createNewAdvertisement(advertisementDto))
     }
 
-    @PreAuthorize("hasAuthority('CONFIRM_ADVERTISEMENT')")
+    @PreAuthorize("@securityHandler.hasRightToConfirmThisAdvertisement(#id) && hasAuthority('CONFIRM_ADVERTISEMENT')")
     @PutMapping
-    fun confirmAdvertisement(@RequestParam id: Long, @RequestParam status: Boolean): ResponseEntity<Unit> {
-        advertisementService.confirmAdvertisement(id, status)
+    fun confirmAdvertisement(@RequestParam id: Long, @RequestParam bankAccountNumber: Long, @RequestParam status: Boolean): ResponseEntity<Unit> {
+        advertisementService.confirmAdvertisement(id, bankAccountNumber, status)
         return ResponseEntity.ok().build()
     }
 
     @PreAuthorize("hasAuthority('CHECK_ADVERTISEMENT')")
     @GetMapping
-    fun getAdvertisements(@RequestParam userId: Long): ResponseEntity<MutableList<AdvertisementDto>> {
-        val principal: String = SecurityContextHolder.getContext().authentication.principal as String
-        println(principal)
-        val advertisementList = advertisementService.getAdvertisements(userId)
+    fun getAdvertisements(): ResponseEntity<MutableList<AdvertisementDto>> {
+        val advertisementList = advertisementService.getAdvertisements()
         return ResponseEntity.ok(advertisementList)
     }
 

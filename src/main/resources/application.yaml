@@ -1,19 +1,22 @@
 spring:
   application:
     name: CianApplication
+  jta:
+    enabled: true
+    transaction-manager-id: app-tm
+    atomikos:
+      properties:
+        log-base-dir: ./atomikos-txlog
+        max-timeout: 600000
   datasource:
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: admin
-    url: jdbc:postgresql://localhost:5432/Cian?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    hikari:
-      connection-init-sql: SET NAMES 'UTF8'
+    initialize: false
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
-      hibernate:
-        connection:
-          charset: UTF8
-          characterEncoding: UTF-8
+      jakarta.persistence.transactionType: JTA
+      hibernate.transaction.coordinator_class: jta
+      hibernate.transaction.jta.platform: org.hibernate.engine.transaction.jta.platform.internal.AtomikosJtaPlatform
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.yaml
 

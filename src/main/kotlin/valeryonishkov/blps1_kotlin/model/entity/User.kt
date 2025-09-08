@@ -11,6 +11,7 @@ class User(
     var surname: String,
     var email: String,
     var password: String,
+    @Column(name = "phone_number")
     var phoneNumber: String,
     var role: Role,
     @field:OneToMany(mappedBy = "user") var advertisements: MutableList<Advertisement>)

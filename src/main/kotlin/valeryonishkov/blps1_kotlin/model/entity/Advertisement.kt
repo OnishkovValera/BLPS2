@@ -3,17 +3,21 @@ package valeryonishkov.blps1_kotlin.model.entity
 import jakarta.persistence.*
 import valeryonishkov.blps1_kotlin.model.dto.AdvertisementDto
 import valeryonishkov.blps1_kotlin.model.enums.AdvertisementStatus
+import java.time.LocalDateTime
 
 @Entity
 class Advertisement(
     @field:[Id GeneratedValue(strategy = GenerationType.IDENTITY)] var id: Long?,
     var email: String,
+    @Column(name = "paid_promotional")
     var paidPromotional: Boolean,
+    @Column(name = "advertisement_status")
     var advertisementStatus: AdvertisementStatus,
     var price: Double,
+    var time: LocalDateTime = LocalDateTime.now(),
     @field:OneToOne(cascade = [CascadeType.ALL]) var address: Address,
-    @field:OneToOne(cascade = [CascadeType.ALL]) var apartmentDescription: ApartmentDescription,
-    @field:[ManyToOne(cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH]) JoinColumn(name = "user_id")] var user: User?,
+    @field:[OneToOne(cascade = [CascadeType.ALL]) PrimaryKeyJoinColumn(name = "apartment_description_id")] var apartmentDescription: ApartmentDescription,
+    @field:[ManyToOne(cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH]) JoinColumn(name = "user_id")] var user: User,
 )
 
 fun Advertisement.toDto(): AdvertisementDto {
@@ -23,6 +27,7 @@ fun Advertisement.toDto(): AdvertisementDto {
         paidPromotional = this.paidPromotional,
         price = this.price,
         address = this.address.toDto(),
-        apartmentDescription = this.apartmentDescription.toDto(),
-        userId = this.user?.id ?: 0)
+        time = this.time,
+        apartmentDescription = this.apartmentDescription.toDto()
+    )
 }

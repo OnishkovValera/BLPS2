@@ -31,7 +31,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-core:3.2.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -42,10 +41,13 @@ dependencies {
     implementation("org.springframework.session:spring-session-core")
     implementation("com.github.ProjectMapK:KMapper:0.36")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-artemis:3.3.0")
+    implementation("com.atomikos:transactions-spring-boot3-starter:6.0.0")
+    implementation("org.apache.activemq:artemis-jakarta-client:2.31.0")
     testImplementation("org.springframework.security:spring-security-test")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql:42.6.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
