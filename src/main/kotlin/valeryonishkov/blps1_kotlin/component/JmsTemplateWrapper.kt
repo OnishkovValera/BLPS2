@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 class JmsTemplateWrapper(private val jmsTemplate: JmsTemplate) {
     companion object {
         const val BANK_QUEUE_NAME = "bank.bill"
-
     }
 
     fun sendBill(price: Double, bankAccountNumber: Long?, advertisementId: Long?) {

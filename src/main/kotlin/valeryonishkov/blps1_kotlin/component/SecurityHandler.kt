@@ -2,7 +2,6 @@ package valeryonishkov.blps1_kotlin.component
 
 import org.springframework.stereotype.Component
 import valeryonishkov.blps1_kotlin.repository.AdvertisementRepository
-import valeryonishkov.blps1_kotlin.service.AdvertisementService
 import valeryonishkov.blps1_kotlin.service.UserService
 
 @Component

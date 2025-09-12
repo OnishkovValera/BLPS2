@@ -19,6 +19,23 @@ spring:
       hibernate.transaction.jta.platform: org.hibernate.engine.transaction.jta.platform.internal.AtomikosJtaPlatform
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.yaml
+  quartz:
+    auto-startup: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: onishkovvalera@gmail.com
+    password: ifpyupsnetmbfyii
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
+
 
 server:
   servlet:
@@ -31,3 +48,8 @@ logging:
     org:
       springframework:
         security: DEBUG
+        scheduling:
+          quartz: DEBUG
+      quartz:
+        core:
+          QuartzScheduler: DEBUG

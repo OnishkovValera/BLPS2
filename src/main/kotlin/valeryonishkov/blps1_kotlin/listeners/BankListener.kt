@@ -7,7 +7,7 @@ import valeryonishkov.blps1_kotlin.service.AdvertisementService
 @Component
 class BankListener(private val advertisementService: AdvertisementService) {
 
-    @JmsListener(destination = "service.advertisement.payed")
+    @JmsListener(destination = "advertisement.payed")
     fun receiveMessage(message: String) {
         val payedAdvertisementId: Long = message.toLong()
         advertisementService.confirmPaidAdvertisement(payedAdvertisementId)

@@ -11,6 +11,7 @@ import valeryonishkov.blps1_kotlin.model.entity.toDto
 import valeryonishkov.blps1_kotlin.model.enums.AdvertisementStatus
 import valeryonishkov.blps1_kotlin.repository.AdvertisementRepository
 import valeryonishkov.blps1_kotlin.repository.UserRepository
+import java.time.LocalDateTime
 
 @Service
 class AdvertisementService(
@@ -19,6 +20,7 @@ class AdvertisementService(
     private val userService: UserService,
     private val priceCalculator: PriceCalculator,
     private val jmsTemplateWrapper: JmsTemplateWrapper,
+    private val emailService: EmailService,
 ) {
     fun createNewAdvertisement(advertisementDto: AdvertisementDto): AdvertisementDto? {
         val user = userService.getUserFromSecurityContext()
@@ -31,7 +33,7 @@ class AdvertisementService(
         return advertisementRepository.save(advertisement).toDto()
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class, RuntimeException::class])
     fun confirmAdvertisement(id: Long, bankAccountNumber: Long, status: Boolean) {
         var advertisementOnConfirmation = advertisementRepository.findById(id).orElseThrow()
         if (status) {
@@ -62,5 +64,15 @@ class AdvertisementService(
     fun confirmPaidAdvertisement(payedAdvertisementId: Long) {
         val paidAdvertisement = advertisementRepository.findById(payedAdvertisementId).orElseThrow()
         paidAdvertisement.advertisementStatus = AdvertisementStatus.PUBLISHED
+        println(paidAdvertisement.user.email)
+        println("====================")
+
+        emailService.sendEmail("Payment confirmation", paidAdvertisement.user.email)
+    }
+
+    @Transactional
+    fun deleteByAdvertisementStatusAndTimeBefore(): Long {
+        return advertisementRepository.deleteByAdvertisementStatusAndTimeBefore(AdvertisementStatus.ARCHIVED, LocalDateTime.now().minusYears(1))
+
     }
 }
