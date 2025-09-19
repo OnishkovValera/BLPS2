@@ -44,6 +44,7 @@ dependencies {
     implementation("com.github.ProjectMapK:KMapper:0.36")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-artemis:3.3.0")
+    implementation("org.camunda.bpm:camunda-external-task-client:7.17.0")
     implementation("com.atomikos:transactions-spring-boot3-starter:6.0.0")
     implementation("org.apache.activemq:artemis-jakarta-client:2.31.0")
     testImplementation("org.springframework.security:spring-security-test")

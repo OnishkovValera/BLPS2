@@ -1,5 +1,6 @@
 package valeryonishkov.blps1_kotlin.service
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import valeryonishkov.blps1_kotlin.component.JmsTemplateWrapper
@@ -23,7 +24,7 @@ class AdvertisementService(
     private val emailService: EmailService,
 ) {
     fun createNewAdvertisement(advertisementDto: AdvertisementDto): AdvertisementDto? {
-        val user = userService.getUserFromSecurityContext()
+        val user = userRepository.findByEmail("onishkovvalerywork@gmail.com")
         val price = priceCalculator.calculatePrice(
             advertisementDto.paidPromotional,
             user!!.id as Long,
@@ -55,18 +56,26 @@ class AdvertisementService(
         }
     }
 
+    fun confirmFreeAdvertisement(id: Long){
+        var advertisementOnConfirmation = advertisementRepository.findById(id).orElseThrow()
+        advertisementOnConfirmation.advertisementStatus = AdvertisementStatus.PUBLISHED
+        advertisementRepository.save(advertisementOnConfirmation)
+    }
+
     fun getAdvertisements(): MutableList<AdvertisementDto> {
         val user = userService.getUserFromSecurityContext() ?: throw RuntimeException("User is not authorized")
         return user.advertisements.map { it.toDto() }.toMutableList()
-
     }
 
     fun confirmPaidAdvertisement(payedAdvertisementId: Long) {
         val paidAdvertisement = advertisementRepository.findById(payedAdvertisementId).orElseThrow()
         paidAdvertisement.advertisementStatus = AdvertisementStatus.PUBLISHED
-        println(paidAdvertisement.user.email)
-        println("====================")
+        emailService.sendEmail("Payment confirmation", paidAdvertisement.user.email)
+    }
 
+    fun unconfirmPaidAdvertisement(payedAdvertisementId: Long) {
+        val paidAdvertisement = advertisementRepository.findById(payedAdvertisementId).orElseThrow()
+        paidAdvertisement.advertisementStatus = AdvertisementStatus.ARCHIVED
         emailService.sendEmail("Payment confirmation", paidAdvertisement.user.email)
     }
 
@@ -74,5 +83,20 @@ class AdvertisementService(
     fun deleteByAdvertisementStatusAndTimeBefore(): Long {
         return advertisementRepository.deleteByAdvertisementStatusAndTimeBefore(AdvertisementStatus.ARCHIVED, LocalDateTime.now().minusYears(1))
 
+    }
+
+    public fun changeAdvertisementStatus(id: Long) {
+        var advertisementOnConfirmation = advertisementRepository.findById(id).orElseThrow()
+        advertisementOnConfirmation.advertisementStatus = AdvertisementStatus.ON_PAYMENT
+        advertisementRepository.save(advertisementOnConfirmation)
+    }
+        @Transactional
+    fun sendAdvertisementMessage(id: Long, bankAccountNumber: Long) {
+        var advertisementOnConfirmation = advertisementRepository.findById(id).orElseThrow()
+        jmsTemplateWrapper.sendBill(
+            advertisementOnConfirmation.price,
+            bankAccountNumber,
+            advertisementOnConfirmation.id
+        )
     }
 }

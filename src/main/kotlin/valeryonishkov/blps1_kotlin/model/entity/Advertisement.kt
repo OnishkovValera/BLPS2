@@ -17,7 +17,7 @@ class Advertisement(
     var time: LocalDateTime = LocalDateTime.now(),
     @field:OneToOne(cascade = [CascadeType.ALL]) var address: Address,
     @field:[OneToOne(cascade = [CascadeType.ALL]) PrimaryKeyJoinColumn(name = "apartment_description_id")] var apartmentDescription: ApartmentDescription,
-    @field:[ManyToOne(cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH]) JoinColumn(name = "user_id")] var user: User,
+    @field:[ManyToOne(cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH]) JoinColumn(name = "user_id")] var user: User,
 )
 
 fun Advertisement.toDto(): AdvertisementDto {
