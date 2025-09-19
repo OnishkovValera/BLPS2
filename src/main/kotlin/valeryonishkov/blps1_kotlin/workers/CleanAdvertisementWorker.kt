@@ -16,12 +16,12 @@ class CleanAdvertisementWorker(
 
     @PostConstruct
     fun subscribe() {
-        client.subscribe("publicate-advertisement")
+        client.subscribe("clean-old-advertisement")
             .lockDuration(1000)
             .handler(::execute)
             .open()
     }
-    
+
     fun execute(externalTask: ExternalTask, externalTaskService: ExternalTaskService){
         advertisementService.deleteByAdvertisementStatusAndTimeBefore()
         externalTaskService.complete(externalTask)
